@@ -1,43 +1,46 @@
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+int lomuto(int *numeros,int min,int max,int n){
+    int pv = numeros[max];
+    int i = min - 1;
 
-
-int supersum(char* cadena,int n){
-    char *aux = malloc(sizeof(char)*100001);
-    long long suma = 0;
-    int tam = strlen(cadena);
-    if (tam == 1 && n == 1){
-        free(aux);
-        return cadena[0] - '0';
+    for (int j = min; j < max; j++){
+        if (numeros[j] < pv){
+            i++;
+            int temp = numeros[i];numeros[i] = numeros[j];numeros[j] = temp;
+        }
     }
+    int temp = numeros[i+1];
+    numeros[i+1] = numeros[max];
+    numeros[max] = temp;
 
-    for (int i = 0; i < tam; i++){
-        suma += cadena[i] - '0';
+    for (int k = 0; k <= n-1;k++){
+        printf("%d ",numeros[k]);
     }
-
-    
-    if (n > 1){
-        suma *= n;
+    printf("\n");
+    return i + 1;
+}
+void qsort(int *numeros,int min,int max,int n){
+    if (min < max){
+        int l = lomuto(numeros,min,max,n);
+        qsort(numeros,min,l-1,n);
+        qsort(numeros,l+1,max,n);
     }
-
-    sprintf(aux,"%lld",suma);
-
-    if (n != 1){
-        n = 1;
-    }
-    int res = supersum(aux, n);
-    free(aux);
-    return res;
 }
 
+
 int main(void){
-    int m,h;
-    char *cadena = malloc(sizeof(char)*100001);
-    scanf("%s",cadena);
-    scanf("%d",&m);
-    h = supersum(cadena,m);
-    printf("%d",h);
-    free(cadena);
+
+    int n;
+
+    scanf("%d",&n);
+
+    int numbers[n];
+
+    for (int i = 0;i < n;i++){
+        scanf("%d",&numbers[i]);
+    }
+
+    qsort(numbers,0,n-1,n);
+
     return 0;
 }
